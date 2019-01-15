@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">MoodTracker</string>
+    <string name="newComment_image_description">Adds a new comment for this current mood</string>
+    <string name="historic_image_description">Shows historic</string>
+    <string name="smiley_image_description">Current mood</string>
 </resources>

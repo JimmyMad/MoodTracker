@@ -4,35 +4,23 @@ public class Mood {
 
     private int moodId;
     private int colorId;
-    private String moodName;
+    private int indexNb;
 
-    public Mood(int moodId, int colorId, String moodName) {
+    public Mood(int moodId, int colorId, int index) {
         this.moodId = moodId;
         this.colorId = colorId;
-        this.moodName = moodName;
+        this.indexNb = index;
     }
 
     public int getMoodId() {
         return moodId;
     }
 
-    public void setMoodId(int moodId) {
-        this.moodId = moodId;
-    }
-
     public int getColorId() {
         return colorId;
     }
 
-    public void setColorId(int colorId) {
-        this.colorId = colorId;
-    }
-
-    public String getMoodName() {
-        return moodName;
-    }
-
-    public void setMoodName(String moodName) {
-        this.moodName = moodName;
+    public int getIndexNb() {
+        return indexNb;
     }
 }
