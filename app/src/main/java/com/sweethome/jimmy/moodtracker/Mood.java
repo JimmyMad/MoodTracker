@@ -4,23 +4,17 @@ public class Mood {
 
     private int moodId;
     private int colorId;
-    private int indexNb;
 
-    public Mood(int moodId, int colorId, int index) {
+    public Mood(int moodId, int colorId) {
         this.moodId = moodId;
         this.colorId = colorId;
-        this.indexNb = index;
     }
 
     public int getMoodId() {
-        return moodId;
+        return this.moodId;
     }
 
     public int getColorId() {
-        return colorId;
-    }
-
-    public int getIndexNb() {
-        return indexNb;
+        return this.colorId;
     }
 }
