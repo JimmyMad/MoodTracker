@@ -17,6 +17,7 @@ import com.sweethome.jimmy.moodtracker.R;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
 
@@ -27,18 +28,18 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private ImageView mHistoricImage;
     private LinearLayout mBackgroundColor;
 
-    public static Date date;
-    String sDate;
-    DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT);
+    private  Date date;
+    private String sDate;
+    private DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT);
     //public MoodBank moodHistoric = new MoodBank();
 
     MoodBank mMoodBank = new MoodBank();
-    Mood moodTable[];
+    LinkedList<Mood> moodLinkedList;
     int currentMoodIndex;
 
     private Mood mCurrentMood = null;
 
-    SharedPreferences sharedPref;
+    private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,18 +52,13 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         //moodHistoric.setMoodTable(new Mood[]{null, null, null, null, null, null, null});
 
         sharedPref = getPreferences(MODE_PRIVATE);
-        getCurrentDate();
+        //getCurrentDate();
 
         mMoodBank.generateMoodTable();
-        moodTable = mMoodBank.getMoodTable();
-
-        System.out.println("Dabug!! Before SharedPref Method PASSED! ");
-
-        System.out.println("Dabug!! Before IF Method PASSED! ");
+        moodLinkedList = mMoodBank.getMoodLinkedList();
 
         currentMoodIndex = 3;
-
-        System.out.println("Dabug!! AfterIf Method PASSED! ");
+        System.out.println("currentIndexMood "+currentMoodIndex);
 
         mMoodImage = findViewById(R.id.MainActivity_Smiley_ImageView);
         mAddCommentImage = findViewById(R.id.MainActivity_NewComment_ImageView);
@@ -70,79 +66,69 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         mBackgroundColor = findViewById(R.id.MainActivity_Background_LinearLayout);
 
 
-
-        try {
-            System.out.println("Dabug!! Try");
+        /*try {
             loadCurrentMood();
-            System.out.println("Dabug!! Tryed");
         } catch (ParseException e) {
             e.printStackTrace();
-            System.out.println("Dabug!! FUCKED");
+        }
+        setCurrentMood(currentMoodIndex);*/
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getCurrentDate();
+        try {
+            loadCurrentMood();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
         setCurrentMood(currentMoodIndex);
-        setMoodImageAndBackground();
         saveCurrentMood();
-
-        System.out.println("Dabug!! OnCreate Method PASSED! ");
+        setMoodImageAndBackground();
     }
 
     private void setCurrentMood(int index) {
-        mCurrentMood = moodTable[index];
-        System.out.println("Dabug!! SetCurrentMood Method PASSED! ");
+        mCurrentMood = moodLinkedList.get(index);
     }
 
     private void setMoodImageAndBackground() {
         mMoodImage.setImageResource(mCurrentMood.getMoodId());
         mBackgroundColor.setBackgroundResource(mCurrentMood.getColorId());
         Toast.makeText(this, sDate, Toast.LENGTH_LONG).show();
-        System.out.println("Dabug!! setMoodImageAndBackground Method PASSED! ");
     }
 
     private void saveCurrentMood() {
         sharedPref.edit().putInt("KEY_MOOD_ID", mCurrentMood.getMoodId()).apply();
         getCurrentDate();
         sharedPref.edit().putString("KEY_LAST_DATE_USED", sDate).apply();
-        System.out.println("Dabug!! " + sharedPref.getString("KEY_LAST_DATE_USED", ""));
-        System.out.println("Dabug!! saveCurrentMood Method PASSED! ");
     }
 
     private void loadCurrentMood() throws ParseException {
-        int i = 0;
         if (!sharedPref.getString("KEY_LAST_DATE_USED", "").isEmpty()) {
-            System.out.println("Dabug!! " + i++);
-            System.out.println("Dabug!! " + sharedPref.getString("KEY_LAST_DATE_USED", ""));
-
-
             Date currentDate = formatter.parse(sDate);
-            System.out.println("Dabug!! " + currentDate);
-            System.out.println("Dabug!! " + i++);
             Date savedDate = formatter.parse(sharedPref.getString("KEY_LAST_DATE_USED", ""));
-            System.out.println("Dabug!! " + i++);
-            System.out.println("Dabug!! " + savedDate);
-            System.out.println("Dabug!! " + currentDate);
-
             if((currentDate.getTime() - (long)(1000*60*60*24)) >= savedDate.getTime()) {
-                setCurrentMood(currentMoodIndex);
+                currentMoodIndex = 3;
             } else {
-                if (sharedPref.getInt("KEY_MOOD_ID", 0) != 0) {
-                    currentMoodIndex = -1;
-                    for (Mood aMood:moodTable) {
-                        currentMoodIndex++;
-                        if (aMood.getMoodId() == sharedPref.getInt("KEY_MOOD_ID", 0)){
-                            mCurrentMood = aMood;
-                            return;
+                    if (sharedPref.getInt("KEY_MOOD_ID", 0) != 0) {
+                        currentMoodIndex = -1;
+                        for (Mood aMood : moodLinkedList) {
+                            currentMoodIndex++;
+                            if (aMood.getMoodId() == sharedPref.getInt("KEY_MOOD_ID", 0)){
+                                mCurrentMood = aMood;
+                                return;
+                            }
                         }
                     }
-                }
             }
         }
+        System.out.println("currentIndexMood "+currentMoodIndex);
     }
 
     private void getCurrentDate() {
         date = new Date();
         sDate = formatter.format(date);
-        System.out.println("Dabug!! " + sDate);
-        System.out.println("Dabug!! " + sharedPref.getString("KEY_LAST_DATE_USED", ""));
     }
 
     @Override
@@ -183,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         setCurrentMood(currentMoodIndex);
         saveCurrentMood();
         setMoodImageAndBackground();
+        System.out.println("currentIndexMood "+currentMoodIndex);
         return true;
     }
 
