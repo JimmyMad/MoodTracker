@@ -7,7 +7,7 @@
     android:background="@color/light_sage"
     android:gravity="center"
     android:orientation="horizontal"
-    tools:context=".MainActivity">
+    tools:context=".controller.MainActivity">
 
 
     <ImageView

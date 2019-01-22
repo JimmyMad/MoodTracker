@@ -1,19 +1,17 @@
-package com.sweethome.jimmy.moodtracker;
+package com.sweethome.jimmy.moodtracker.model;
 
+
+import com.sweethome.jimmy.moodtracker.R;
 
 public class MoodBank {
 
 
     private Mood moodTable[];
 
-    public MoodBank() {
-        generateMoodTable();
-    }
-
     /**
      * Creates all the moods and store them in a table
      */
-    private void generateMoodTable() {
+    public void generateMoodTable() {
         Mood sadMood = new Mood(R.drawable.smiley_sad, R.color.faded_red);
         Mood disappointedMood = new Mood(R.drawable.smiley_disappointed, R.color.warm_grey);
         Mood normalMood = new Mood(R.drawable.smiley_normal, R.color.cornflower_blue_65);

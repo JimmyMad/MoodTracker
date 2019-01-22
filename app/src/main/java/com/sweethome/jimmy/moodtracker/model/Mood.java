@@ -1,13 +1,24 @@
-package com.sweethome.jimmy.moodtracker;
+package com.sweethome.jimmy.moodtracker.model;
+
+import java.util.Date;
 
 public class Mood {
 
     private int moodId;
     private int colorId;
+    private Date date;
 
-    public Mood(int moodId, int colorId) {
+    Mood(int moodId, int colorId) {
         this.moodId = moodId;
         this.colorId = colorId;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Date getDate() {
+        return date;
     }
 
     public int getMoodId() {
