@@ -1,11 +1,13 @@
 package com.sweethome.jimmy.moodtracker.controller;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -25,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private ImageView mMoodImage;
     private ImageView mAddCommentImage;
-    private ImageView mHistoricImage;
+    private ImageView mHistoryImage;
     private LinearLayout mBackgroundColor;
 
     private  Date date;
@@ -48,30 +50,25 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         detectGesture = new GestureDetectorCompat(this, this);
 
-
-        //moodHistoric.setMoodTable(new Mood[]{null, null, null, null, null, null, null});
-
         sharedPref = getPreferences(MODE_PRIVATE);
-        //getCurrentDate();
 
         mMoodBank.generateMoodTable();
         moodLinkedList = mMoodBank.getMoodLinkedList();
 
         currentMoodIndex = 3;
-        System.out.println("currentIndexMood "+currentMoodIndex);
 
         mMoodImage = findViewById(R.id.MainActivity_Smiley_ImageView);
         mAddCommentImage = findViewById(R.id.MainActivity_NewComment_ImageView);
-        mHistoricImage = findViewById(R.id.MainActivity_Historic_ImageView);
+        mHistoryImage = findViewById(R.id.MainActivity_History_ImageView);
         mBackgroundColor = findViewById(R.id.MainActivity_Background_LinearLayout);
 
-
-        /*try {
-            loadCurrentMood();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        setCurrentMood(currentMoodIndex);*/
+        mHistoryImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent activityChangeIntent = new Intent(MainActivity.this, HistoryActivity.class);
+                MainActivity.this.startActivity(activityChangeIntent);
+            }
+        });
     }
 
     @Override
@@ -84,12 +81,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             e.printStackTrace();
         }
         setCurrentMood(currentMoodIndex);
-        saveCurrentMood();
-        setMoodImageAndBackground();
     }
 
     private void setCurrentMood(int index) {
         mCurrentMood = moodLinkedList.get(index);
+        saveCurrentMood();
+        setMoodImageAndBackground();
     }
 
     private void setMoodImageAndBackground() {
@@ -123,7 +120,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
             }
         }
-        System.out.println("currentIndexMood "+currentMoodIndex);
     }
 
     private void getCurrentDate() {
@@ -160,16 +156,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         if ( e1.getRawY() > e2.getRawY() && currentMoodIndex < 4) {
             currentMoodIndex++;
-            System.out.println("currentIndexMood "+currentMoodIndex);
 
         } if (e1.getRawY() < e2.getRawY() && currentMoodIndex > 0) {
             currentMoodIndex--;
-            System.out.println("currentIndexMood "+currentMoodIndex);
         }
         setCurrentMood(currentMoodIndex);
-        saveCurrentMood();
-        setMoodImageAndBackground();
-        System.out.println("currentIndexMood "+currentMoodIndex);
         return true;
     }
 
