@@ -3,37 +3,26 @@ package com.sweethome.jimmy.moodtracker.model;
 
 import com.sweethome.jimmy.moodtracker.R;
 
-import java.util.LinkedList;
-
 public class MoodBank {
 
 
-    private LinkedList<Mood> moodLinkedList = new LinkedList<>();
+    private Mood moodTable[];
 
     /**
      * Creates all the moods and store them in a table
      */
-    public void generateMoodTable() {
-        Mood sadMood = new Mood(R.drawable.smiley_sad, R.color.faded_red);
-        Mood disappointedMood = new Mood(R.drawable.smiley_disappointed, R.color.warm_grey);
-        Mood normalMood = new Mood(R.drawable.smiley_normal, R.color.cornflower_blue_65);
-        Mood happyMood = new Mood(R.drawable.smiley_happy, R.color.light_sage);
-        Mood superHappyMood = new Mood(R.drawable.smiley_super_happy, R.color.banana_yellow);
+    public MoodBank() {
+        Mood sadMood = new Mood(R.drawable.smiley_sad, "Sad", R.color.faded_red);
+        Mood disappointedMood = new Mood(R.drawable.smiley_disappointed, "Disappointed", R.color.warm_grey);
+        Mood normalMood = new Mood(R.drawable.smiley_normal, "Normal", R.color.cornflower_blue_65);
+        Mood happyMood = new Mood(R.drawable.smiley_happy, "Happy", R.color.light_sage);
+        Mood superHappyMood = new Mood(R.drawable.smiley_super_happy, "SuperHappy", R.color.banana_yellow);
 
-        this.moodLinkedList.addFirst(superHappyMood);
-        System.out.println("currentIndexMood "+this.moodLinkedList.getFirst().getMoodId());
-        this.moodLinkedList.addFirst(happyMood);
-        System.out.println("currentIndexMood "+this.moodLinkedList.getFirst().getMoodId());
-        this.moodLinkedList.addFirst(normalMood);
-        System.out.println("currentIndexMood "+this.moodLinkedList.getFirst().getMoodId());
-        this.moodLinkedList.addFirst(disappointedMood);
-        System.out.println("currentIndexMood "+this.moodLinkedList.getFirst().getMoodId());
-        this.moodLinkedList.addFirst(sadMood);
-        System.out.println("currentIndexMood "+this.moodLinkedList.getFirst().getMoodId());
+        this.moodTable = new Mood[]{sadMood, disappointedMood, normalMood, happyMood, superHappyMood};
     }
 
-    public LinkedList<Mood> getMoodLinkedList() {
-        return this.moodLinkedList;
+    public Mood[] getMoodTable() {
+        return moodTable;
     }
 
     /*public void addMoodToList(Mood aMood) {

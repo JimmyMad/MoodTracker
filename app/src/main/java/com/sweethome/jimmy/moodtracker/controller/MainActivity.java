@@ -19,7 +19,6 @@ import com.sweethome.jimmy.moodtracker.R;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
 
@@ -27,17 +26,16 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private ImageView mMoodImage;
     private ImageView mAddCommentImage;
-    private ImageView mHistoryImage;
+    ImageView mHistoryImage;
     private LinearLayout mBackgroundColor;
 
-    private  Date date;
+    Date date;
     private String sDate;
     private DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT);
     //public MoodBank moodHistoric = new MoodBank();
 
-    MoodBank mMoodBank = new MoodBank();
-    LinkedList<Mood> moodLinkedList;
-    int currentMoodIndex;
+    private MoodBank mMoodBank = new MoodBank();
+    private int currentMoodIndex;
 
     private Mood mCurrentMood = null;
 
@@ -51,9 +49,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         detectGesture = new GestureDetectorCompat(this, this);
 
         sharedPref = getPreferences(MODE_PRIVATE);
-
-        mMoodBank.generateMoodTable();
-        moodLinkedList = mMoodBank.getMoodLinkedList();
 
         currentMoodIndex = 3;
 
@@ -84,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     private void setCurrentMood(int index) {
-        mCurrentMood = moodLinkedList.get(index);
+        mCurrentMood = mMoodBank.getMoodTable()[index];
         saveCurrentMood();
         setMoodImageAndBackground();
     }
@@ -105,19 +100,18 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         if (!sharedPref.getString("KEY_LAST_DATE_USED", "").isEmpty()) {
             Date currentDate = formatter.parse(sDate);
             Date savedDate = formatter.parse(sharedPref.getString("KEY_LAST_DATE_USED", ""));
-            if((currentDate.getTime() - (long)(1000*60*60*24)) >= savedDate.getTime()) {
-                currentMoodIndex = 3;
-            } else {
-                    if (sharedPref.getInt("KEY_MOOD_ID", 0) != 0) {
-                        currentMoodIndex = -1;
-                        for (Mood aMood : moodLinkedList) {
-                            currentMoodIndex++;
-                            if (aMood.getMoodId() == sharedPref.getInt("KEY_MOOD_ID", 0)){
-                                mCurrentMood = aMood;
-                                return;
-                            }
+            if((currentDate.getTime() - savedDate.getTime() >= (long)(1000*60*60*24))) currentMoodIndex = 3;
+            else {
+                if (sharedPref.getInt("KEY_MOOD_ID", 0) != 0) {
+                    currentMoodIndex = -1;
+                    for (Mood aMood : mMoodBank.getMoodTable()) {
+                        currentMoodIndex++;
+                        if (aMood.getMoodId() == sharedPref.getInt("KEY_MOOD_ID", 0)){
+                            mCurrentMood = aMood;
+                            return;
                         }
                     }
+                }
             }
         }
     }
@@ -134,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     @Override
     public void onShowPress(MotionEvent e) {
-
     }
 
     @Override
@@ -149,17 +142,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     @Override
     public void onLongPress(MotionEvent e) {
-
     }
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        if ( e1.getRawY() > e2.getRawY() && currentMoodIndex < 4) {
-            currentMoodIndex++;
-
-        } if (e1.getRawY() < e2.getRawY() && currentMoodIndex > 0) {
-            currentMoodIndex--;
-        }
+        if ( e1.getRawY() > e2.getRawY() && currentMoodIndex < 4) currentMoodIndex++;
+        if (e1.getRawY() < e2.getRawY() && currentMoodIndex > 0) currentMoodIndex--;
         setCurrentMood(currentMoodIndex);
         return true;
     }
