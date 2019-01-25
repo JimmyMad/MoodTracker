@@ -24,18 +24,4 @@ public class MoodBank {
     public Mood[] getMoodTable() {
         return moodTable;
     }
-
-    /*public void addMoodToList(Mood aMood) {
-        int currentMoodDay = aMood.getDate().getDay();
-        int currentMoodMonth = aMood.getDate().getMonth();
-        int currentMoodYear = aMood.getDate().getYear();
-        int calendarDay = MainActivity.calendar.getTime().getDay();
-        int calendarMonth = MainActivity.calendar.getTime().getMonth();
-        int calendarYear = MainActivity.calendar.getTime().getYear();
-
-        if (aMood.getDate() == null ||
-                ((currentMoodDay <= calendarDay) && currentMoodMonth <= calendarMonth)  ) {
-
-        }
-    }*/
 }

@@ -1,13 +1,16 @@
 package com.sweethome.jimmy.moodtracker.controller;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -56,6 +59,33 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         mAddCommentImage = findViewById(R.id.MainActivity_NewComment_ImageView);
         mHistoryImage = findViewById(R.id.MainActivity_History_ImageView);
         mBackgroundColor = findViewById(R.id.MainActivity_Background_LinearLayout);
+
+        mAddCommentImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText editText = new EditText(MainActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Commentaire")
+                        .setView(editText)
+                        .setPositiveButton("Valider", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                /** TODO
+                                 * save the comment etc
+                                 */
+                                closeContextMenu();
+                            }
+                        })
+                        .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                closeContextMenu();
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+        });
 
         mHistoryImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,11 +148,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             Date savedDate = formatter.parse(sharedPref.getString("KEY_LAST_DATE_USED", ""));
             if((currentDate.getTime() - savedDate.getTime() >= (long)(1000*60*60*24))) currentMoodIndex = 3;
             else {
-                if (sharedPref.getInt("KEY_MOOD_ID", 0) != 0) {
+                if (!sharedPref.getString("KEY_MOOD_ID", "").isEmpty()) {
                     currentMoodIndex = -1;
                     for (Mood aMood : mMoodBank.getMoodTable()) {
                         currentMoodIndex++;
-                        if (aMood.getMoodName() == sharedPref.getString("KEY_MOOD_ID", "")){
+                        if (aMood.getMoodName().equals( sharedPref.getString("KEY_MOOD_ID", ""))){
                             mCurrentMood = aMood;
                             return;
                         }

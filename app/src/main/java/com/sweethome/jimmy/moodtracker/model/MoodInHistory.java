@@ -19,7 +19,7 @@ public class MoodInHistory {
     }
 
     public void setComment(String comment) {
-        comment = comment;
+        this.comment = comment;
     }
 
     public Mood getMood() {
