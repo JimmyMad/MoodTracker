@@ -78,24 +78,40 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         setCurrentMood(currentMoodIndex);
     }
 
+    /**
+     * Set the current mood on screen and saves it
+     * @param index The index of the current in the moodTable
+     */
     private void setCurrentMood(int index) {
         mCurrentMood = mMoodBank.getMoodTable()[index];
         saveCurrentMood();
         setMoodImageAndBackground();
     }
 
+    /**
+     * Update the ImageView and the background color of the Layout
+     * so it matches the current mood
+     */
     private void setMoodImageAndBackground() {
         mMoodImage.setImageResource(mCurrentMood.getMoodId());
         mBackgroundColor.setBackgroundResource(mCurrentMood.getColorId());
         Toast.makeText(this, sDate, Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * Stores the mood's name and current date
+     */
     private void saveCurrentMood() {
-        sharedPref.edit().putInt("KEY_MOOD_ID", mCurrentMood.getMoodId()).apply();
+        sharedPref.edit().putString("KEY_MOOD_ID", mCurrentMood.getMoodName()).apply();
         getCurrentDate();
         sharedPref.edit().putString("KEY_LAST_DATE_USED", sDate).apply();
     }
 
+    /**
+     * This method is looking if there was a saved date and load the saved mood if true
+     * Put the default mood if there is no saved date or if the new date is higher or equal than 1 day
+     * @throws ParseException
+     */
     private void loadCurrentMood() throws ParseException {
         if (!sharedPref.getString("KEY_LAST_DATE_USED", "").isEmpty()) {
             Date currentDate = formatter.parse(sDate);
@@ -106,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     currentMoodIndex = -1;
                     for (Mood aMood : mMoodBank.getMoodTable()) {
                         currentMoodIndex++;
-                        if (aMood.getMoodId() == sharedPref.getInt("KEY_MOOD_ID", 0)){
+                        if (aMood.getMoodName() == sharedPref.getString("KEY_MOOD_ID", "")){
                             mCurrentMood = aMood;
                             return;
                         }
