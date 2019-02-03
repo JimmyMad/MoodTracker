@@ -3,4 +3,11 @@
     <string name="newComment_image_description">Adds a new comment for this current mood</string>
     <string name="historic_image_description">Shows history</string>
     <string name="smiley_image_description">Current mood</string>
+    <string name="Row_TextView1">Hier</string>
+    <string name="Row_TextView2">Avant hier</string>
+    <string name="Row_TextView3">Il y a trois jours</string>
+    <string name="Row_TextView4">Il y a quatre jours</string>
+    <string name="Row_TextView5">Il y a cinq jours</string>
+    <string name="Row_TextView6">Il y a six jours</string>
+    <string name="Row_TextView7">Il y a une semaine</string>
 </resources>
