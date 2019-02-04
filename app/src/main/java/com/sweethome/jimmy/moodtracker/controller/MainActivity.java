@@ -117,22 +117,17 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         setSimpleDateFormat();
         String sList = sharedPref.getString("KEY_MOOD_HISTORY_LIST", "");
-        System.out.println("Dabugage : sList" + sharedPref.getString("KEY_MOOD_HISTORY_LIST", ""));
         if (sList.equals("")) {
             moodHistory = new LinkedList<>();
             mCurrentMood = new Mood(mMoodBank.getMoodTable()[currentMoodIndex], date);
-            System.out.println("Dabugage : if list true");
         } else {
             Type linkedListType = new TypeToken<LinkedList<Mood>>(){}.getType();
             moodHistory = gson.fromJson(sList, linkedListType);
-            System.out.println("Dabugage : if list false");
-            //System.out.println("Dabugage :" + moodHistory.getFirst().getDate());
             mCurrentMood = gson.fromJson(sharedPref.getString("KEY_LAST_MOOD_OBJECT", ""), Mood.class);
 
             currentMoodIndex = -1;
             for (Mood aMood : mMoodBank.getMoodTable()) {
                 currentMoodIndex++;
-                System.out.println("Dabugage :" + currentMoodIndex);
                 if (mCurrentMood.getMoodName().equals(aMood.getMoodName())) {
                     return;
                 }
@@ -161,6 +156,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         sharedPref.edit().putString("KEY_LAST_MOOD_OBJECT", gson.toJson(mCurrentMood)).apply();
     }
 
+    /**
+     * Adds a mood to history if one or more days between the current date and the last mood's date,
+     * a default mood is added for each extra days.
+     */
     private void addMoodToMoodHistory() {
         if (date.getTime() - mCurrentMood.getDate().getTime() >= 86400000) {
             moodHistory.addFirst(mCurrentMood);
@@ -188,6 +187,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         }
     }
 
+    /**
+     * Gets the current date and set it to dd/MM/YYYY format
+     */
     private void setSimpleDateFormat() {
         date = new Date();
         String sDate = dateFormatter.format(date);
@@ -199,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     /**
-     * Set the current mood on screen and saves it
+     * Modifies ColorId, MoodId, moodName and SoundId of the current mood
      */
     private void setCurrentMood() {
         mCurrentMood.setColorId(mMoodBank.getMoodTable()[currentMoodIndex].getColorId());
@@ -215,7 +217,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private void updateCurrentMoodOnScreen() {
         mMoodImage.setImageResource(mCurrentMood.getMoodId());
         mBackgroundColor.setBackgroundResource(mCurrentMood.getColorId());
-        Toast.makeText(this, date.toString(), Toast.LENGTH_LONG).show();
     }
 
     @Override
