@@ -9,7 +9,7 @@ public class MoodBank {
     private Mood moodTable[];
 
     /**
-     * Creates all the moods and store them in a table
+     * Create all the moods and store them in a table
      */
     public MoodBank() {
         Mood sadMood = new Mood(R.drawable.smiley_sad, "Sad", R.color.faded_red, R.raw.sad);

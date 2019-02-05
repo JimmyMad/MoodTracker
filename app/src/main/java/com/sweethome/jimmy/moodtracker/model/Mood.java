@@ -1,7 +1,6 @@
 package com.sweethome.jimmy.moodtracker.model;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.RawRes;
 
 import java.util.Date;
 
