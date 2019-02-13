@@ -24,8 +24,8 @@ import com.sweethome.jimmy.moodtracker.R;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.Locale;
 
 
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private MoodBank mMoodBank = new MoodBank();
     private int currentMoodIndex;
-    public LinkedList<Mood> moodHistory;
+    public ArrayList<Mood> moodHistory;
 
     private Mood mCurrentMood;
 
@@ -78,14 +78,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 builder.setTitle("Commentaire")
                         .setView(editText)
                         .setPositiveButton("Valider", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (!editText.getText().toString().equals("")){
-                            mCurrentMood.setComment(editText.getText().toString());
-                        }
-                        closeContextMenu();
-                    }
-                })
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (!editText.getText().toString().equals("")){
+                                    mCurrentMood.setComment(editText.getText().toString());
+                                }
+                                closeContextMenu();
+                            }
+                        })
                         .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -109,23 +109,27 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         });
 
         setSimpleDateFormat();
+        // We are looking for an existing history, if there isn't, we create it
         String sList = sharedPref.getString("KEY_MOOD_HISTORY_LIST", "");
         if (sList.equals("")) {
-            moodHistory = new LinkedList<>();
+            moodHistory = new ArrayList<>();
+            for (int i = 0; i < 7; i++) {
+                moodHistory.add(null);
+            }
+        } else {
+            Type ArrayListType = new TypeToken<ArrayList<Mood>>(){}.getType();
+            moodHistory = gson.fromJson(sList, ArrayListType);
+        }
+        // We are looking for an existing saved last mood, if there isn't, we create it with the default mood
+        String sLastMood = sharedPref.getString("KEY_LAST_MOOD_OBJECT", "");
+        if (sLastMood.equals("")) {
             mCurrentMood = new Mood(mMoodBank.getMoodTable()[currentMoodIndex], date);
         } else {
-            Type linkedListType = new TypeToken<LinkedList<Mood>>(){}.getType();
-            moodHistory = gson.fromJson(sList, linkedListType);
             mCurrentMood = gson.fromJson(sharedPref.getString("KEY_LAST_MOOD_OBJECT", ""), Mood.class);
-
-            currentMoodIndex = -1;
-            for (Mood aMood : mMoodBank.getMoodTable()) {
+            currentMoodIndex = 0;
+            while (!mCurrentMood.getMoodName().equals(mMoodBank.getMoodTable()[currentMoodIndex].getMoodName())) {
                 currentMoodIndex++;
-                if (mCurrentMood.getMoodName().equals(aMood.getMoodName())) {
-                    return;
-                }
             }
-
         }
     }
 
@@ -134,7 +138,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         super.onResume();
         setSimpleDateFormat();
         if (date.getTime() - mCurrentMood.getDate().getTime() >= 86400000) {
-            addMoodToMoodHistory();
+            moodHistory.add(mCurrentMood);
+            if (moodHistory.size() > 7) {
+                moodHistory.remove(0);
+            }
+            sharedPref.edit().putString("KEY_MOOD_HISTORY_LIST", gson.toJson(moodHistory)).apply();
             currentMoodIndex = 3;
             mCurrentMood = new Mood(mMoodBank.getMoodTable()[currentMoodIndex], date);
         }
@@ -144,20 +152,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     @Override
     protected void onPause() {
         super.onPause();
-        sharedPref.edit().putString("KEY_MOOD_HISTORY_LIST", gson.toJson(moodHistory)).apply();
         sharedPref.edit().putString("KEY_LAST_MOOD_OBJECT", gson.toJson(mCurrentMood)).apply();
-    }
-
-    /**
-     * Add a mood to history if one or more days between the current date and the last mood's date
-     */
-    private void addMoodToMoodHistory() {
-        moodHistory.addFirst(mCurrentMood);
-        if ( moodHistory.size() > 7) {
-            for (int j = moodHistory.size() ; j > 7 ; j--) {
-                moodHistory.removeLast();
-            }
-        }
     }
 
     /**
@@ -174,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     /**
-     * Modifie ColorId, MoodId, moodName and SoundId of the current mood
+     * Modify ColorId, MoodId, moodName and SoundId of the current mood
      */
     private void setCurrentMood() {
         mCurrentMood.setColorId(mMoodBank.getMoodTable()[currentMoodIndex].getColorId());
