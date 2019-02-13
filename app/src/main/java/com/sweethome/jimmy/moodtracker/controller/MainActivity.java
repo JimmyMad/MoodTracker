@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         setSimpleDateFormat();
         // We are looking for an existing history, if there isn't, we create it
         String sList = sharedPref.getString("KEY_MOOD_HISTORY_LIST", "");
-        if (sList.equals("")) {
+        if (sList != null && sList.equals("")) {
             moodHistory = new ArrayList<>();
             for (int i = 0; i < 7; i++) {
                 moodHistory.add(null);
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         }
         // We are looking for an existing saved last mood, if there isn't, we create it with the default mood
         String sLastMood = sharedPref.getString("KEY_LAST_MOOD_OBJECT", "");
-        if (sLastMood.equals("")) {
+        if (sLastMood != null && sLastMood.equals("")) {
             mCurrentMood = new Mood(mMoodBank.getMoodTable()[currentMoodIndex], date);
         } else {
             mCurrentMood = gson.fromJson(sharedPref.getString("KEY_LAST_MOOD_OBJECT", ""), Mood.class);
