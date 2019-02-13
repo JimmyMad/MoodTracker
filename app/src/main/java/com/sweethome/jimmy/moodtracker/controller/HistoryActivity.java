@@ -48,6 +48,10 @@ public class HistoryActivity extends AppCompatActivity {
                 getString(R.string.Row_TextView3), getString(R.string.Row_TextView2),
                 getString(R.string.Row_TextView1)};
 
+        /*
+        This code creates TextViews for each Mood object in the History ArrayList
+        null elements creates TextViews only to scale properly non-null Mood objects
+         */
         if (!moodHistory.isEmpty()) {
             Display display = getWindowManager().getDefaultDisplay();
             Point size = new Point();
@@ -75,6 +79,8 @@ public class HistoryActivity extends AppCompatActivity {
                     historyTv.setTextSize(18);
                     historyTv.setTypeface(null, Typeface.BOLD);
                     historyTv.setTextColor(Color.BLACK);
+
+                    // For each Mood there is a different width, it goes from 20% to 100% of the screen
                     switch (moodHistory.get(i).getMoodName()) {
                         case "Sad":
                             LinearLayout.LayoutParams paramsSad = new LinearLayout.LayoutParams(
@@ -121,6 +127,7 @@ public class HistoryActivity extends AppCompatActivity {
                             historyTv.setLayoutParams(paramsSuperHappy);
                             break;
                     }
+                    // If the Mood object has a comment, the TextViews is clickable and a comment icon is shown
                     if (!moodHistory.get(i).getComment().equals("")) {
                         historyTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_comment_black_48px, 0);
                         historyTv.setClickable(true);

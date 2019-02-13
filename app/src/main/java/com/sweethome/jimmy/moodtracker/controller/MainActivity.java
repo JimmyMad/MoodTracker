@@ -100,8 +100,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         mHistoryImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sharedPref.edit().putString("KEY_MOOD_HISTORY_LIST", gson.toJson(moodHistory)).apply();
-                sharedPref.edit().putString("KEY_LAST_MOOD_OBJECT", gson.toJson(mCurrentMood)).apply();
                 Intent activityChangeIntent = new Intent(MainActivity.this, HistoryActivity.class);
                 activityChangeIntent.putExtra("history", sharedPref.getString("KEY_MOOD_HISTORY_LIST", ""));
                 MainActivity.this.startActivity(activityChangeIntent);
