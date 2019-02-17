@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             public void onClick(DialogInterface dialog, int which) {
                                 if (!editText.getText().toString().equals("")){
                                     mCurrentMood.setComment(editText.getText().toString());
+                                } else {
+                                    mCurrentMood.setComment("");
                                 }
                                 closeContextMenu();
                             }
@@ -100,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         mHistoryImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sharedPref.edit().putString("KEY_MOOD_HISTORY_LIST", gson.toJson(moodHistory)).apply();
                 Intent activityChangeIntent = new Intent(MainActivity.this, HistoryActivity.class);
                 activityChangeIntent.putExtra("history", sharedPref.getString("KEY_MOOD_HISTORY_LIST", ""));
                 MainActivity.this.startActivity(activityChangeIntent);

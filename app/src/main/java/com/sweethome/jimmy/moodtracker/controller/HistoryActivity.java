@@ -52,95 +52,94 @@ public class HistoryActivity extends AppCompatActivity {
         This code creates TextViews for each Mood object in the History ArrayList
         null elements creates TextViews only to scale properly non-null Mood objects
          */
-        if (!moodHistory.isEmpty()) {
-            Display display = getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            int width = size.x;
 
-            for (int i = 0; i < moodHistory.size(); i++) {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
 
-                if (moodHistory.get(i) == null) {
-                    TextView historyTv = new TextView(this);
-                    historyTv.setClickable(false);
-                    LinearLayout.LayoutParams paramsSuperHappy = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            0,
-                            1
-                    );
-                    historyTv.setLayoutParams(paramsSuperHappy);
-                    linearLayout.addView(historyTv);
-                } else {
-                    TextView historyTv = new TextView(this);
-                    historyTv.setClickable(false);
-                    historyTv.setText(sTable[i]);
-                    historyTv.setBackgroundColor(getResources().getColor(moodHistory.get(i).getColorId()));
-                    historyTv.setPadding(0, 0, (int) (size.x * 0.05), 0);
-                    historyTv.setTextSize(18);
-                    historyTv.setTypeface(null, Typeface.BOLD);
-                    historyTv.setTextColor(Color.BLACK);
+        for (int i = 0; i < moodHistory.size(); i++) {
 
-                    // For each Mood there is a different width, it goes from 20% to 100% of the screen
-                    switch (moodHistory.get(i).getMoodName()) {
-                        case "Sad":
-                            LinearLayout.LayoutParams paramsSad = new LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    0,
-                                    1
-                            );
-                            paramsSad.setMargins(0, 0, (int) (width * 0.8), 0);
-                            historyTv.setLayoutParams(paramsSad);
-                            break;
-                        case "Disappointed":
-                            LinearLayout.LayoutParams paramsDisappointed = new LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    0,
-                                    1
-                            );
-                            paramsDisappointed.setMargins(0, 0, (int) (width * 0.6), 0);
-                            historyTv.setLayoutParams(paramsDisappointed);
-                            break;
-                        case "Normal":
-                            LinearLayout.LayoutParams paramsNormal = new LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    0,
-                                    1
-                            );
-                            paramsNormal.setMargins(0, 0, (int) (width * 0.4), 0);
-                            historyTv.setLayoutParams(paramsNormal);
-                            break;
-                        case "Happy":
-                            LinearLayout.LayoutParams paramsHappy = new LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    0,
-                                    1
-                            );
-                            paramsHappy.setMargins(0, 0, (int) (width * 0.2), 0);
-                            historyTv.setLayoutParams(paramsHappy);
-                            break;
-                        case "SuperHappy":
-                            LinearLayout.LayoutParams paramsSuperHappy = new LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    0,
-                                    1
-                            );
-                            historyTv.setLayoutParams(paramsSuperHappy);
-                            break;
-                    }
-                    // If the Mood object has a comment, the TextViews is clickable and a comment icon is shown
-                    if (!moodHistory.get(i).getComment().equals("")) {
-                        historyTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_comment_black_48px, 0);
-                        historyTv.setClickable(true);
-                        final int finalI = i;
-                        historyTv.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Toast.makeText(HistoryActivity.this, moodHistory.get(finalI).getComment(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                    linearLayout.addView(historyTv);
+            if (moodHistory.get(i) == null) {
+                TextView historyTv = new TextView(this);
+                historyTv.setClickable(false);
+                LinearLayout.LayoutParams paramsSuperHappy = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        0,
+                        1
+                );
+                historyTv.setLayoutParams(paramsSuperHappy);
+                linearLayout.addView(historyTv);
+            } else {
+                TextView historyTv = new TextView(this);
+                historyTv.setClickable(false);
+                historyTv.setText(sTable[i]);
+                historyTv.setBackgroundColor(getResources().getColor(moodHistory.get(i).getColorId()));
+                historyTv.setPadding(0, 0, (int) (size.x * 0.05), 0);
+                historyTv.setTextSize(18);
+                historyTv.setTypeface(null, Typeface.BOLD);
+                historyTv.setTextColor(Color.BLACK);
+
+                // For each Mood there is a different width, it goes from 20% to 100% of the screen
+                switch (moodHistory.get(i).getMoodName()) {
+                    case "Sad":
+                        LinearLayout.LayoutParams paramsSad = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                0,
+                                1
+                        );
+                        paramsSad.setMargins(0, 0, (int) (width * 0.8), 0);
+                        historyTv.setLayoutParams(paramsSad);
+                        break;
+                    case "Disappointed":
+                        LinearLayout.LayoutParams paramsDisappointed = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                0,
+                                1
+                        );
+                        paramsDisappointed.setMargins(0, 0, (int) (width * 0.6), 0);
+                        historyTv.setLayoutParams(paramsDisappointed);
+                        break;
+                    case "Normal":
+                        LinearLayout.LayoutParams paramsNormal = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                0,
+                                1
+                        );
+                        paramsNormal.setMargins(0, 0, (int) (width * 0.4), 0);
+                        historyTv.setLayoutParams(paramsNormal);
+                        break;
+                    case "Happy":
+                        LinearLayout.LayoutParams paramsHappy = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                0,
+                                1
+                        );
+                        paramsHappy.setMargins(0, 0, (int) (width * 0.2), 0);
+                        historyTv.setLayoutParams(paramsHappy);
+                        break;
+                    case "SuperHappy":
+                        LinearLayout.LayoutParams paramsSuperHappy = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                0,
+                                1
+                        );
+                        historyTv.setLayoutParams(paramsSuperHappy);
+                        break;
                 }
+                // If the Mood object has a comment, the TextViews is clickable and a comment icon is shown
+                if (!moodHistory.get(i).getComment().equals("")) {
+                    historyTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_comment_black_48px, 0);
+                    historyTv.setClickable(true);
+                    final int finalI = i;
+                    historyTv.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(HistoryActivity.this, moodHistory.get(finalI).getComment(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                linearLayout.addView(historyTv);
             }
         }
     }
